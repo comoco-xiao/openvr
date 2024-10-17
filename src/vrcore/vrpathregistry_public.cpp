@@ -12,9 +12,8 @@
 #include <shlobj.h>
 
 #undef GetEnvironmentVariable
-#elif defined OSX
+#elif defined(OSX) || defined(IOS)
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
 #elif defined(LINUX)
 #include <dlfcn.h>
 #include <stdio.h>
@@ -48,7 +47,7 @@ static std::string GetAppSettingsPath()
 	std::string sUserPath = UTF16to8( rwchPath );
 
 	return sUserPath;
-#elif defined( OSX )
+#elif defined( OSX ) || defined( IOS )
 	std::string sSettingsDir;
 	@autoreleasepool {
 		// Search for the path
@@ -117,7 +116,7 @@ std::string CVRPathRegistry_Public::GetOpenVRConfigPath()
 
 #if defined( _WIN32 ) || defined( LINUX )
 	sConfigPath = Path_Join( sConfigPath, "openvr" );
-#elif defined ( OSX ) 
+#elif defined ( OSX ) || defined( IOS )
 	sConfigPath = Path_Join( sConfigPath, ".openvr" );
 #else
 	#warning "Unsupported platform"

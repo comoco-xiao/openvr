@@ -56,7 +56,7 @@ std::string StringToUpper( const std::string & sString );
 std::string StringToLower( const std::string & sString );
 
 // we stricmp (from WIN) but it isn't POSIX - OSX/LINUX have strcasecmp so just inline bridge to it
-#if defined( OSX ) || defined( LINUX )
+#if defined( OSX ) || defined( LINUX ) || defined( IOS )
 int stricmp(const char *pStr1, const char *pStr2);
 #ifndef _stricmp
 #define _stricmp stricmp
@@ -74,7 +74,7 @@ int strnicmp( const char *pStr1, const char *pStr2, size_t unBufferLen );
 
 #endif
 
-#if defined( OSX )
+#if defined( OSX ) || defined( IOS )
 // behaviors ensure NULL-termination at least as well as _TRUNCATE does, but
 // wcsncpy_s/strncpy_s can non-NULL-terminate, wcslcpy/strlcpy can not.
 inline errno_t wcsncpy_s(wchar_t *strDest, size_t numberOfElements, const wchar_t *strSource, size_t count)

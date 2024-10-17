@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #endif
 
-#if defined( OSX )
+#if defined( OSX ) || defined( IOS )
 #include <sys/syslimits.h>
 #endif
 
@@ -443,7 +443,7 @@ static char selectBuf[ PATH_MAX ];
 
 #if defined( OSX ) && !defined( __MAC_10_8 )
 static int FileSelect( direntBig_t *ent )
-#elif defined( LINUX ) || defined( OSX )
+#elif defined( LINUX ) || defined( OSX ) || defined( IOS )
 static int FileSelect( const direntBig_t *ent )
 #else
 #error

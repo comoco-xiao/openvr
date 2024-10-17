@@ -21,7 +21,7 @@
 #include <windows.h>
 #endif
 
-#if defined( OSX ) || defined( LINUX )
+#if defined( OSX ) || defined( LINUX ) || defined( IOS )
 //-----------------------------------------------------------------------------
 // Purpose:  stricmp -> strcasecmp bridge
 //-----------------------------------------------------------------------------

@@ -133,7 +133,7 @@ bool Path_DeleteDirectory( const std::string& sDirectoryPath, bool bDeleteSubdir
 #else
 #define PLATSUBDIR	"win32"
 #endif
-#elif defined(OSX)
+#elif defined(OSX) || defined(IOS)
 #define DYNAMIC_LIB_EXT	".dylib"
 #define PLATSUBDIR	"osx32"
 #define PROGRAM_EXT ""

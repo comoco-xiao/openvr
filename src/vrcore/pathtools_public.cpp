@@ -19,11 +19,16 @@
 #include <alloca.h>
 #endif
 
-#if defined OSX
+#if defined(OSX)
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
 #include <mach-o/dyld.h>
 #define _S_IFDIR S_IFDIR     // really from tier0/platform.h which we dont have yet
+#elif defined(IOS)
+#ifdef __OBJC__
+#include <Foundation/Foundation.h>
+#endif
+#include <mach-o/dyld.h>
+#define _S_IFDIR S_IFDIR
 #endif
 
 #include <sys/stat.h>
@@ -43,7 +48,7 @@ std::string Path_GetExecutablePath()
 	std::string sPath = pchPath;
 	delete[] pchPath;
 	return sPath;
-#elif defined( OSX )
+#elif defined( OSX ) || defined( IOS )
 	char rchPath[1024];
 	uint32_t nBuff = sizeof( rchPath );
 	bool bSuccess = _NSGetExecutablePath(rchPath, &nBuff) == 0;
@@ -445,7 +450,7 @@ std::string Path_GetThisModulePath()
 	delete [] pchPath;
 	return sPath;
 
-#elif defined( OSX ) || defined( LINUX )
+#elif defined( OSX ) || defined( LINUX ) || defined( IOS )
 	// get the addr of a function in vrclient.so and then ask the dlopen system about it
 	Dl_info info;
 	dladdr( (void *)Path_GetThisModulePath, &info );
@@ -474,7 +479,7 @@ bool Path_IsDirectory( const std::string & sPath )
 		return false;
 	}
 
-#if defined( LINUX ) || defined( OSX )
+#if defined( LINUX ) || defined( OSX ) || defined( IOS )
 	return S_ISDIR( buf.st_mode );
 #else
 	return (buf.st_mode & _S_IFDIR) != 0;
@@ -495,7 +500,7 @@ bool Path_IsDirectory( const std::string & sPath )
 /** returns true if the specified path represents an app bundle */
 bool Path_IsAppBundle( const std::string & sPath )
 {
-#if defined(OSX)
+#if defined(OSX) || defined(IOS)
 	@autoreleasepool {
 		NSBundle *bundle = [ NSBundle bundleWithPath: [ NSString stringWithUTF8String:sPath.c_str() ] ];
 		bool bisAppBundle = ( nullptr != bundle );
@@ -917,7 +922,7 @@ std::string GetUserDocumentsPath()
 	std::string sUserPath = UTF16to8( rwchPath );
 
 	return sUserPath;
-#elif defined( OSX )
+#elif defined( OSX ) || defined( IOS )
 	@autoreleasepool {
 		NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
 		if ( [paths count] == 0 )
